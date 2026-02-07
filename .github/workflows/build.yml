@@ -14,16 +14,16 @@ jobs:
         with:
           submodules: recursive
 
-      # 2️⃣ 安装依赖和 ARM GCC
+      # 2️⃣ 安装依赖
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y cmake libnewlib-arm-none-eabi build-essential ninja-build wget tar
-          
-      - name: Setup ARM GCC 10 (reliable)
-        uses: armmbed/setup-arm@v1
-        with:
-          version: 10-2020-q4-major
+
+          # 安装官方 Raspberry Pi ARM GCC
+          wget https://github.com/raspberrypi/pico-toolchain/releases/download/10-2022.07/gcc-arm-none-eabi-10-2022.07-x86_64-linux.tar.xz
+          sudo tar xf gcc-arm-none-eabi-10-2022.07-x86_64-linux.tar.xz -C /opt
+          echo "/opt/gcc-arm-none-eabi-10-2022.07/bin" >> $GITHUB_PATH
 
       # 3️⃣ 创建构建目录
       - name: Configure build
@@ -38,7 +38,7 @@ jobs:
           cd build
           ninja
 
-      # 5️⃣ 上传生成的 UF2
+      # 5️⃣ 上传 UF2 固件
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
