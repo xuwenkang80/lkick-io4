@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # 1️⃣ 检出代码及 submodule
@@ -39,4 +39,5 @@ jobs:
         with:
           name: firmware.uf2
           path: build/**/*.uf2
+
 
