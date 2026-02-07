@@ -24,8 +24,8 @@ namespace component {
 
     const uint8_t PIN_BIT[12] = {  // for keyboard mode
             // L: A B C SIDE MENU
-            1, 1, 1, 0, 1,
-            1, 1, 1, 0, 1,
+            0, 0, 0, 0, 1,
+            0, 0, 0, 0, 1,
             1, 1};
 
     const uint8_t SWITCH_INDEX[12] = {
@@ -224,3 +224,4 @@ namespace component {
         }
     }
 }
+
