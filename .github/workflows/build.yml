@@ -1,24 +1,46 @@
 name: Build
 
-on: [push]
+on: 
+  push:
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ 检出代码及 submodule
       - uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
-      - run: |
+          submodules: recursive
+
+      # 2️⃣ 安装依赖（锁定 GCC 10）
+      - name: Install dependencies
+        run: |
           sudo apt update
-          sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential ninja-build
-      - run: |
-          mkdir build
+          sudo apt install -y cmake libnewlib-arm-none-eabi build-essential ninja-build wget tar
+          # 安装官方推荐的 GCC 10
+          wget https://developer.arm.com/-/media/Files/downloads/gnu/10.3-2021.10/binrel/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+          sudo tar xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C /opt
+          export PATH=/opt/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH
+          arm-none-eabi-gcc --version
+
+      # 3️⃣ 创建构建目录
+      - name: Configure build
+        run: |
+          mkdir -p build
           cd build
-          cmake -G Ninja ..
+          cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release
+
+      # 4️⃣ 编译
+      - name: Build
+        run: |
+          cd build
           ninja
-      - uses: actions/upload-artifact@v4
+
+      # 5️⃣ 上传生成的 UF2
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
         with:
           name: firmware.uf2
-
-          path: ./**/*.uf2
+          path: build/**/*.uf2
