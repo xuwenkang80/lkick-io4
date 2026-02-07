@@ -18,12 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake libnewlib-arm-none-eabi build-essential ninja-build wget tar
-
-          # 安装官方 Raspberry Pi ARM GCC
-          wget https://github.com/raspberrypi/pico-toolchain/releases/download/10-2022.07/gcc-arm-none-eabi-10-2022.07-x86_64-linux.tar.xz
-          sudo tar xf gcc-arm-none-eabi-10-2022.07-x86_64-linux.tar.xz -C /opt
-          echo "/opt/gcc-arm-none-eabi-10-2022.07/bin" >> $GITHUB_PATH
+          sudo apt install -y cmake build-essential ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-dev wget tar
 
       # 3️⃣ 创建构建目录
       - name: Configure build
@@ -44,3 +39,4 @@ jobs:
         with:
           name: firmware.uf2
           path: build/**/*.uf2
+
