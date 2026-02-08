@@ -12,7 +12,7 @@ void ResponsiveAnalogRead::begin(int pin, bool sleepEnable, float snapMultiplier
 
 void ResponsiveAnalogRead::update()
 {
-    adc_select_input(adc_channel);
+    adc_select_input(2);
     int raw = adc_read();
 
     // ① 更新动态极限
@@ -146,3 +146,4 @@ void ResponsiveAnalogRead::setSnapMultiplier(float newMultiplier)
     snapMultiplier = newMultiplier;
 
 }
+
