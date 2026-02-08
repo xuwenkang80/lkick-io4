@@ -10,13 +10,46 @@ void ResponsiveAnalogRead::begin(int pin, bool sleepEnable, float snapMultiplier
     adc_gpio_init(pin);
 }
 
-
 void ResponsiveAnalogRead::update()
 {
-    adc_select_input(2);
-    rawValue = adc_read();
-    this->update(rawValue);
+    adc_select_input(adc_channel);
+    int raw = adc_read();
+
+    // ① 更新动态极限
+    if (raw < dyn.min) dyn.min = raw;
+    if (raw > dyn.max) dyn.max = raw;
+
+    // ② 上电 2 秒后才启用映射
+    if (!dyn.ready) {
+        if (to_ms_since_boot(get_absolute_time()) - dyn.start_ms > 2000) {
+            dyn.ready = true;
+        }
+        // 校准阶段，直接用中值
+        this->update(2048);
+        return;
+    }
+
+    // ③ 动态量程映射
+    int span = dyn.max - dyn.min;
+    if (span < 20) {
+        this->update(2048);
+        return;
+    }
+
+    int mapped = (raw - dyn.min) * 4095 / span;
+    if (mapped < 0) mapped = 0;
+    if (mapped > 4095) mapped = 4095;
+
+    // ④ 把“拉伸后的值”交给 ResponsiveAnalogRead
+    this->update(mapped);
 }
+//更新动态校准ADC量程
+//void ResponsiveAnalogRead::update()
+//{
+//    adc_select_input(2);
+//    rawValue = adc_read();
+//    this->update(rawValue);
+//}
 
 void ResponsiveAnalogRead::update(int rawValueRead)
 {
@@ -111,4 +144,5 @@ void ResponsiveAnalogRead::setSnapMultiplier(float newMultiplier)
         newMultiplier = 0.0;
     }
     snapMultiplier = newMultiplier;
+
 }
