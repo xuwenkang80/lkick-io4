@@ -1,3 +1,4 @@
+#include <cstdint>
 
 class ResponsiveAnalogRead
 {
@@ -68,3 +69,4 @@ private:
     DynamicADC dyn;
 
 };
+
