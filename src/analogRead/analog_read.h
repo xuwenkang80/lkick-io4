@@ -55,4 +55,16 @@ private:
 
     int getResponsiveValue(int newValue);
     float snapCurve(float x);
+
+
+    //动态输入范围调整用结构体,由于机械上的限制,摇杆只能在adc采样的部分区域内活动,因此需要在启动前进行范围的校准
+    struct DynamicADC {
+        int min = 4095;
+        int max = 0;
+        bool ready = false;
+        uint32_t start_ms = 0;
+    };
+
+    DynamicADC dyn;
+
 };
