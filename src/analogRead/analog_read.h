@@ -36,6 +36,9 @@ public:
     inline void setAnalogResolution(int resolution) { analogResolution = resolution; }
     // if your ADC is something other than 10bit (1024), set that here
 
+    void setInvert(bool enable) { invertOutput = enable; }
+    void toggleInvert() { invertOutput = !invertOutput; }
+
 private:
     int pin;
     int analogResolution = 4096;
@@ -57,6 +60,8 @@ private:
     int getResponsiveValue(int newValue);
     float snapCurve(float x);
 
+    bool invertOutput = true; //防止摇杆接反,导致往左打方向小人往右边飞
+
 
     //动态输入范围调整用结构体,由于机械上的限制,摇杆只能在adc采样的部分区域内活动,因此需要在启动前进行范围的校准
     struct DynamicADC {
@@ -69,4 +74,5 @@ private:
     DynamicADC dyn;
 
 };
+
 
