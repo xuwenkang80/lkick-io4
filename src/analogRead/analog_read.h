@@ -18,7 +18,12 @@ public:
 
     void begin(int pin, bool sleepEnable, float snapMultiplier = 0.01);  // use with default constructor to initialize
 
-    inline int getValue() { return responsiveValue; } // get the responsive value from last update
+    inline int getValue() {  // get the responsive value from last update
+        if (invertOutput)
+            return analogResolution - responsiveValue;
+        else
+            return responsiveValue;
+    }
     inline int getRawValue() { return rawValue; } // get the raw analogRead() value from last update
     inline bool hasChanged() { return responsiveValueHasChanged; } // returns true if the responsive value has changed during the last update
     inline bool isSleeping() { return sleeping; } // returns true if the algorithm is currently in sleeping mode
@@ -74,5 +79,6 @@ private:
     DynamicADC dyn;
 
 };
+
 
 
