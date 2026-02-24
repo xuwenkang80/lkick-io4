@@ -64,9 +64,10 @@
 
 #define LEVER_PIN 28
 
-#define UART_TX_PIN 16 // rewire to new
-#define UART_RX_PIN 17 // rewire to new
+#define UART_TX_PIN 17 // rewire to new
+#define UART_RX_PIN 16 // rewire to new
 #define UART_ID uart0
 #define BAUD_RATE 115200
 
 #endif //LKICK_STDINCLUDE_H
+
