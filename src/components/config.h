@@ -17,6 +17,8 @@ namespace component {
 
         void init();
 
+        void init_from_boot_analog();
+
         void read_config(uint8_t *buf, uint16_t size);
 
         void erase_config();

@@ -1,6 +1,11 @@
 #include "stdinclude.h"
+#include "hardware/adc.h"
 
 #define CONFIG_SIZE FLASH_SECTOR_SIZE
+#define BOOT_MODE_ADC_PIN LEVER_PIN
+#define BOOT_MODE_ADC_INPUT (BOOT_MODE_ADC_PIN - 26)
+#define BOOT_MODE_ADC_THRESHOLD 2048
+#define BOOT_MODE_ADC_SAMPLES 16
 
 namespace component {
     namespace config {
@@ -21,6 +26,22 @@ namespace component {
                 set_mode(MODE::IO4);
                 break;
             }
+        }
+
+        void init_from_boot_analog() {
+            adc_init();
+            adc_gpio_init(BOOT_MODE_ADC_PIN);
+            adc_select_input(BOOT_MODE_ADC_INPUT);
+
+            adc_read();
+
+            uint32_t total = 0;
+            for (uint8_t i = 0; i < BOOT_MODE_ADC_SAMPLES; i++) {
+                total += adc_read();
+            }
+
+            const uint16_t value = total / BOOT_MODE_ADC_SAMPLES;
+            set_mode(value < BOOT_MODE_ADC_THRESHOLD ? MODE::KEYBOARD : MODE::IO4);
         }
 
         void read_config(uint8_t *buf, uint16_t size) {

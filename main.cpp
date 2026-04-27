@@ -25,6 +25,7 @@ int main() {
     gpio_pull_up(23);
 
     component::config::init();
+    component::config::init_from_boot_analog();
     component::ongeki_hardware::init();
     component::io4_usb::usb_init();
     component::serial::init();
