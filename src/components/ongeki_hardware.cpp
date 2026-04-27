@@ -48,6 +48,11 @@ namespace component {
         USB_HID_SCANCODE_J, USB_HID_SCANCODE_K, USB_HID_SCANCODE_L, USB_HID_SCANCODE_U, USB_HID_SCANCODE_P
     };
 
+    const uint8_t KEYBOARD_PIN_BIT[10] = {
+            0, 0, 0, 0, 1,
+            0, 0, 0, 0, 1
+    };
+
 
 
     
@@ -217,7 +222,7 @@ namespace component {
 
             int key_index = 0;
             for (auto i = 0; i < 10; i++) {
-                auto read = gpio_get(PIN_MAP[i]) ^ PIN_BIT[i];
+                auto read = gpio_get(PIN_MAP[i]) ^ KEYBOARD_PIN_BIT[i];
                 if (read) {
                     add_key(data->keycodes, KEYBOARD_KEYS[i], key_index++);
                 }
